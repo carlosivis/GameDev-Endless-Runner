@@ -12,7 +12,6 @@ class Animate{
         this. frameSprite = 0
     }
         show(){
-            console.log("teste")
             image(this.imagem,this.x, this.y, 
                 this.largura, this.altura,
                 this.matriz[this.frameSprite][0],
