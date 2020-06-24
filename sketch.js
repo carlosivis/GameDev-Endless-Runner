@@ -58,7 +58,8 @@ const matrizChar = [[0, 0],
 [0, baseCharValueY*3],
 [baseCharValueX, baseCharValueY*3],
 [baseCharValueX*2, baseCharValueY*3],
-[baseCharValueX*3, baseCharValueY*3],]  
+[baseCharValueX*3, baseCharValueY*3],
+]  
 
 function preload(){
   imgMap = loadImage('imagens/cenario/floresta.png')
@@ -71,8 +72,8 @@ function setup() {
   createCanvas(windowWidth, windowHeight)
   soundtrack.loop()
   map =  new Map(imgMap, mapSpeed)
-  spriteChar = new Sprite(matrizChar, imgChar,  0, 110, 135, baseCharValueX, baseCharValueY)
-  spriteEnemy = new Enemy(matrizEnemy, imgEnemy, width-52, 52, 52, baseEnemyValue, baseEnemyValue)
+  spriteChar = new Sprite(matrizChar, imgChar,  0, baseCharValueX/2, baseCharValueY/2, baseCharValueX, baseCharValueY)
+  spriteEnemy = new Enemy(matrizEnemy, imgEnemy, 0, baseEnemyValue/2, baseEnemyValue/2, baseEnemyValue, baseEnemyValue)
   frameRate(60)
 }
  
