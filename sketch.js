@@ -73,8 +73,7 @@ function setup() {
   soundtrack.loop()
   map =  new Map(imgMap, mapSpeed)
   spriteChar = new Sprite(matrizChar, imgChar,  0, baseCharValueX/2, baseCharValueY/2, baseCharValueX, baseCharValueY)
-  spriteEnemy = new Enemy(matrizEnemy, imgEnemy, 0, baseEnemyValue/2, baseEnemyValue/2, baseEnemyValue, baseEnemyValue)
-  frameRate(60)
+  spriteEnemy = new Enemy(matrizEnemy, imgEnemy,width - 52, 52, 52, 104, 104)
 }
  
 function draw() {
