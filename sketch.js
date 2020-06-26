@@ -5,8 +5,12 @@ let imgEnemy
 let map
 let spriteEnemy
 let spriteChar
+
+let soundJump
 let soundtrack
-let mapSpeed = 3;
+
+let mapSpeed = 3
+let jumpCount = 0;
 
   // Enemy constants
   const baseEnemyValue = 104
@@ -14,8 +18,8 @@ let mapSpeed = 3;
   const charHeight = 270
   const charWidth = 220
   const baseCharValueX = 220
-  const baseCharValueY = 270
-
+  const baseCharValueY = 270 
+  
 const matrizEnemy = [
   //Line1
   [0, 0],[baseEnemyValue, 0],
@@ -39,7 +43,6 @@ const matrizEnemy = [
   [0, baseEnemyValue*6],[baseEnemyValue, baseEnemyValue*6],
   [baseEnemyValue*2, baseEnemyValue*6],[baseEnemyValue*3, baseEnemyValue*6],
   ]
-
 const matrizChar = [[0, 0],
 [baseCharValueX, 0],
 [baseCharValueX*2, 0],
@@ -65,21 +68,45 @@ function preload(){
   imgMap = loadImage('imagens/cenario/floresta.png')
   imgChar = loadImage('imagens/personagem/correndo.png')
   imgEnemy = loadImage('imagens/inimigos/gotinha.png')
-  soundtrack = loadSound('sons/trilha_jogo.mp3')
+  soundtrack = loadSound('sons/trilha_jogo.mp3')  
+  soundJump = loadSound('sons/somPulo.mp3')
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight)
   soundtrack.loop()
   map =  new Map(imgMap, mapSpeed)
-  spriteChar = new Sprite(matrizChar, imgChar,  0, baseCharValueX/2, baseCharValueY/2, baseCharValueX, baseCharValueY)
-  spriteEnemy = new Enemy(matrizEnemy, imgEnemy,width - 52, 52, 52, 104, 104)
+  spriteChar = new Sprite(matrizChar, imgChar,  height*.10, baseCharValueX/2, baseCharValueY/2, baseCharValueX, baseCharValueY)
+  spriteEnemy = new Enemy(matrizEnemy, imgEnemy, width -52, baseEnemyValue/2, baseEnemyValue/2, baseEnemyValue, baseEnemyValue)
 }
- 
+ function keyPressed(){
+
+   if(key = 'ArrowUp'){
+     jumpCount++
+     if(jumpCount<=2){
+      spriteChar.jump()
+      soundJump.play()
+     }
+     if(jumpCount>2 && spriteChar.y >= height - baseCharValueY/2)
+     jumpCount=0
+     if(spriteChar.y >= height - baseCharValueY/2)
+     jumpCount=0
+   }
+
+ }
 function draw() {
   map.show()
   map.move() 
+
+  spriteChar.show()
+  spriteChar.gravity()
+
   spriteEnemy.show()
   spriteEnemy.move()
-  spriteChar.show()
+
+  if(spriteChar.collision(spriteEnemy)){
+    console.log("Colidiu")
+    noLoop()
+  }
+  
 }
