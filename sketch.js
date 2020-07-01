@@ -2,8 +2,14 @@
 let imgChar
 let imgMap
 let imgEnemy
+let imgBigEnemy
+let imgFlyEnemy
+
+let imgGameOver
 let map
 let spriteEnemy
+let spriteBigEnemy
+let spriteFlyEnemy
 let spriteChar
 
 let soundJump
@@ -11,9 +17,15 @@ let soundtrack
 
 let mapSpeed = 3
 let jumpCount = 0;
+let points
+
+const EnemysArray = []
 
   // Enemy constants
   const baseEnemyValue = 104
+  const baseBigEnemyValue = 400
+  const baseFlyEnemyValueX = 200
+  const baseFlyEnemyValueY = 150
   // Char constants
   const charHeight = 270
   const charWidth = 220
@@ -43,7 +55,56 @@ const matrizEnemy = [
   [0, baseEnemyValue*6],[baseEnemyValue, baseEnemyValue*6],
   [baseEnemyValue*2, baseEnemyValue*6],[baseEnemyValue*3, baseEnemyValue*6],
   ]
-const matrizChar = [[0, 0],
+const matrizEnemyBig = [
+    [0,0],
+    [400,0],
+    [800,0],
+    [1200,0],
+    [1600,0],
+    [0,400],
+    [400,400],
+    [800,400],
+    [1200, 400],
+    [1600, 400],
+    [0,800],
+    [400, 800],
+    [800, 800],
+    [1200, 800],
+    [1600, 800],
+    [0, 1200],
+    [400, 1200],
+    [800, 1200],
+    [1200, 1200],
+    [1600, 1200], 
+    [0, 1600],
+    [400, 1600],
+    [800, 1600],
+    [1200, 1600],
+    [1600, 1600],
+    [0, 2000],
+    [400, 2000],
+    [800, 2000],
+  ]
+const matrizEnemyFly = [
+    [0,0],
+    [200, 0],
+    [400, 0],
+    [0, 150],
+    [200, 150],
+    [400, 150],
+    [0, 300],
+    [200, 300],
+    [400, 300],
+    [0, 450],
+    [200, 450],
+    [400, 450],
+    [0, 600],
+    [200, 600],
+    [400, 600],
+    [0, 750],
+  ]
+const matrizChar = [
+  [0, 0],
 [baseCharValueX, 0],
 [baseCharValueX*2, 0],
 [baseCharValueX*3, 0],
@@ -68,6 +129,9 @@ function preload(){
   imgMap = loadImage('imagens/cenario/floresta.png')
   imgChar = loadImage('imagens/personagem/correndo.png')
   imgEnemy = loadImage('imagens/inimigos/gotinha.png')
+  imgBigEnemy = loadImage('imagens/inimigos/troll.png')
+  imgFlyEnemy = loadImage('imagens/inimigos/gotinha-voadora.png')
+  imgGameOver = loadImage('imagens/assets/game-over.png')
   soundtrack = loadSound('sons/trilha_jogo.mp3')  
   soundJump = loadSound('sons/somPulo.mp3')
 }
@@ -75,22 +139,22 @@ function preload(){
 function setup() {
   createCanvas(windowWidth, windowHeight)
   soundtrack.loop()
+  points = new Pts()
   map =  new Map(imgMap, mapSpeed)
-  spriteChar = new Sprite(matrizChar, imgChar,  height*.10, baseCharValueX/2, baseCharValueY/2, baseCharValueX, baseCharValueY)
-  spriteEnemy = new Enemy(matrizEnemy, imgEnemy, width -52, baseEnemyValue/2, baseEnemyValue/2, baseEnemyValue, baseEnemyValue)
+  spriteChar = new Sprite(matrizChar, imgChar,  height*.10, 30, baseCharValueX/2, baseCharValueY/2, baseCharValueX, baseCharValueY)
+  const spriteEnemy = new Enemy(matrizEnemy, imgEnemy, width -52, 30, baseEnemyValue/2, baseEnemyValue/2,  baseEnemyValue, baseEnemyValue,5,100)
+  const spriteBigEnemy = new Enemy(matrizEnemyBig,imgBigEnemy, width, 0 ,baseBigEnemyValue/2, baseBigEnemyValue/2, baseBigEnemyValue,baseBigEnemyValue,4,3000)
+  const spriteFlyEnemy = new Enemy(matrizEnemyFly, imgFlyEnemy , width, 250 , baseFlyEnemyValueX/2, baseFlyEnemyValueY/2, baseFlyEnemyValueX, baseFlyEnemyValueY, 5, 700)
+
+  EnemysArray.push(spriteFlyEnemy)
+  EnemysArray.push(spriteEnemy)
+  EnemysArray.push(spriteBigEnemy)
 }
  function keyPressed(){
 
    if(key = 'ArrowUp'){
-     jumpCount++
-     if(jumpCount<=2){
       spriteChar.jump()
       soundJump.play()
-     }
-     if(jumpCount>2 && spriteChar.y >= height - baseCharValueY/2)
-     jumpCount=0
-     if(spriteChar.y >= height - baseCharValueY/2)
-     jumpCount=0
    }
 
  }
@@ -100,13 +164,16 @@ function draw() {
 
   spriteChar.show()
   spriteChar.gravity()
-
-  spriteEnemy.show()
-  spriteEnemy.move()
-
-  if(spriteChar.collision(spriteEnemy)){
-    console.log("Colidiu")
-    noLoop()
-  }
+  points.show()
+  points.plus()
+  EnemysArray.forEach(enemy =>{
+    enemy.show()
+    enemy.move()
+    if(spriteChar.collision(enemy)){
+      image(imgGameOver, width/2 -200, height/2 -200)
+      noLoop()
+    }
+  })
+  
   
 }
